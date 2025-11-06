@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CarbonTrace - Calculate Your Carbon Footprint</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="hero-content">
+            <h1>Understand Your Carbon Footprint</h1>
+            <p>Calculate your environmental impact from daily activities and discover actionable ways to reduce your carbon emissions.</p>
+            <button id="hero-cta-button" class="cta-button">Calculate Your Impact</button>
+        </div>
+    </section>
+
+    <!-- Main Content: Calculator and Results -->
+    <main class="main-content">
+
+        <!-- Calculator Form Section -->
+        <section id="calculator-section" class="calculator-container">
+            <header class="calculator-header">
+                <h2>Calculate Your Carbon Footprint</h2>
+                <p>Enter your monthly averages below to get an accurate estimate of your annual carbon emissions.</p>
+            </header>
+
+            <form id="carbon-form">
+                <div class="form-columns">
+                    <!-- Transportation Column -->
+                    <div class="form-column">
+                        <div class="form-card">
+                            <h3><i class="fas fa-car"></i> Transportation</h3>
+                            <p class="card-description">Your monthly travel emissions</p>
+                            <div class="input-group">
+                                <label for="personal-car"><i class="fas fa-car-side"></i> Personal Car (miles/month)</label>
+                                <input type="number" id="personal-car" name="personal_car" placeholder="e.g., 250" min="0" value="">
+                            </div>
+                            <div class="input-group">
+                                <label for="public-transit"><i class="fas fa-bus"></i> Public Transit (miles/month)</label>
+                                <input type="number" id="public-transit" name="public_transit" placeholder="e.g., 50" min="0" value="">
+                            </div>
+                            <div class="input-group">
+                                <label for="flights"><i class="fas fa-plane"></i> Flights (miles/year)</label>
+                                <input type="number" id="flights" name="flights" placeholder="e.g., 2000" min="0" value="">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Household Energy Column -->
+                    <div class="form-column">
+                        <div class="form-card">
+                            <h3><i class="fas fa-home"></i> Household Energy</h3>
+                            <p class="card-description">Your monthly energy consumption</p>
+                            <div class="input-group">
+                                <label for="electricity"><i class="fas fa-bolt"></i> Electricity (kWh/month)</label>
+                                <input type="number" id="electricity" name="electricity" placeholder="e.g., 750" min="0" value="">
+                                <small>Check your utility bill for monthly kWh usage</small>
+                            </div>
+                            <div class="input-group">
+                                <label for="natural-gas"><i class="fas fa-fire"></i> Natural Gas (therms/month)</label>
+                                <input type="number" id="natural-gas" name="natural_gas" placeholder="e.g., 40" min="0" value="">
+                                <small>Found on your gas bill, typically 30-100 therms/month</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="cta-button">Calculate My Impact</button>
+                    <button type="button" id="start-over-button" class="secondary-button">Start Over</button>
+                </div>
+            </form>
+        </section>
+
+        <!-- Results Section (Hidden by default) -->
+        <section id="results-section" class="results-container hidden">
+            <div class="results-summary">
+                <div class="leaf-icon"><i class="fas fa-leaf"></i></div>
+                <p>Your Annual Carbon Footprint</p>
+                <h2 id="total-footprint">0.00</h2>
+                <span>tons CO₂/year</span>
+            </div>
+
+            <div class="results-breakdown">
+                <!-- Transportation Card -->
+                <div class="result-card">
+                    <h4>Transportation <i class="fas fa-car"></i></h4>
+                    <p class="result-total" id="transport-total">0.00</p>
+                    <p class="result-unit">tons CO₂/year (<span id="transport-percentage">0</span>%)</p>
+                    <ul class="breakdown-list">
+                        <li><span>Car</span><span id="car-emissions">0.00</span></li>
+                        <li><span>Transit</span><span id="transit-emissions">0.00</span></li>
+                        <li><span>Flights</span><span id="flight-emissions">0.00</span></li>
+                    </ul>
+                </div>
+
+                <!-- Household Energy Card -->
+                <div class="result-card">
+                    <h4>Household Energy <i class="fas fa-home"></i></h4>
+                    <p class="result-total" id="energy-total">0.00</p>
+                    <p class="result-unit">tons CO₂/year (<span id="energy-percentage">0</span>%)</p>
+                    <ul class="breakdown-list">
+                        <li><span>Electricity</span><span id="electricity-emissions">0.00</span></li>
+                        <li><span>Natural Gas</span><span id="natural-gas-emissions">0.00</span></li>
+                    </ul>
+                </div>
+
+                <!-- Trees to Offset Card -->
+                <div class="result-card">
+                    <h4>Trees to Offset <i class="fas fa-tree"></i></h4>
+                    <p class="result-total" id="trees-offset">0</p>
+                    <p class="result-unit">trees needed to absorb annually</p>
+                </div>
+            </div>
+
+            <div class="category-breakdown">
+                <h4>Category Breakdown</h4>
+                <div class="progress-bar-group">
+                    <label>Transportation</label>
+                    <div class="progress-bar">
+                        <div id="transport-progress" class="progress" style="width: 0%;"></div>
+                    </div>
+                    <span id="transport-progress-label">0%</span>
+                </div>
+                <div class="progress-bar-group">
+                    <label>Household Energy</label>
+                    <div class="progress-bar">
+                        <div id="energy-progress" class="progress" style="width: 0%;"></div>
+                    </div>
+                    <span id="energy-progress-label">0%</span>
+                </div>
+            </div>
+            <div class="form-actions">
+                 <button type="button" id="recalculate-button" class="cta-button">Recalculate</button>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="footer-content">
+            <div class="footer-column">
+                <h4><i class="fas fa-seedling"></i> CarbonTrace</h4>
+                <p>Empowering individuals to understand and reduce their carbon footprint through accurate calculations and actionable insights.</p>
+            </div>
+            <div class="footer-column">
+                <h4>Emission Factors Source</h4>
+                <p>Our calculations use emission factors from the EPA, EIA, and other reliable environmental agencies. Carbon footprint estimates are based on national averages and may vary by region.</p>
+                <p>Tree offset calculations assume an average tree absorbs approximately 48 lbs (0.024 tons) of CO₂ per year.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

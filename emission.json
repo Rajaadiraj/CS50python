@@ -1,0 +1,10 @@
+{
+  "transport": {
+    "car": 0.17,
+    "bus": 0.08,
+    "train": 0.04
+  },
+  "energy": {
+    "default_factor": 0.45
+  }
+}
